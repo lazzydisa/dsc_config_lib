@@ -8,7 +8,8 @@ pub struct Var {
 
 impl Var {
     pub fn get_name(&self) -> String {
-        self.name.clone()
+        self.name.clone()   // anyway you need to copy of the original string
+                            // that's why you will create something like this method
     }
 
     pub fn get_value(&self) -> String {
