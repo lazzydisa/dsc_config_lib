@@ -7,13 +7,19 @@ pub struct Var {
 }
 
 impl Var {
-    pub fn get_name(&self) -> String {
-        self.name.clone()   // anyway you need to copy of the original string
-                            // that's why you will create something like this method
+    pub fn get_name(&self) -> &String {
+        &self.name
     }
 
-    pub fn get_value(&self) -> String {
-        self.value.clone()
+    pub fn get_value(&self) -> &String {
+        &self.value
+    }
+
+    pub fn new<'a>(value: &'a str, name: &'a str) -> Self {
+        Self {
+            value: value.to_string(),
+            name:  name.to_string(),
+        }
     }
 
     pub fn parse_line(line: &str) -> Self {
@@ -76,5 +82,62 @@ impl Var {
         }
 
         v
+    }
+
+    /*
+fn ds_lib_write(st: &str, filename: &str) -> Result<(), String> {
+    let mut file = match File::create(filename) {
+        Ok(file) => file,
+        Err(_) => return Err(String::from("Error: can't create the file!")),
+    };
+
+    match file.write_all(st.as_bytes()) {
+        Ok(()) => Ok(()),
+        Err(_) => Err(String::from("Error: can't write to the file!")),
+    }
+}
+    */
+
+    pub fn write_var(&self, filename: &str) -> Result<(), String> {
+        use std::{
+            fs::File,
+            io::Write,
+        };
+
+        let st = format!("{}: {}", &self.name, &self.value);
+
+        let mut file = match File::create(filename) {
+            Ok(file) => file,
+            Err(_) => return Err(String::from("Error: can't create the file!")),
+        };
+
+        match file.write_all(st.as_bytes()) {
+            Ok(()) => Ok(()),
+            Err(_) => Err(String::from("Error: can't write to the file!")),
+        }
+    }
+
+    pub fn write_var_vec(v: Vec<Self>, filename: &str) -> Result<(), String> {
+        use std::{
+            fs::File,
+            io::Write,
+        };
+
+        let mut buffer = String::new();
+
+        for i in v.iter() {
+            let st = format!("{}: {}\n", i.get_name(), i.get_value());
+            buffer.push_str(&st);
+        }
+
+        let mut file = match File::create(filename) {
+            Ok(file) => file,
+            Err(_) => return Err(String::from("Error: can't create the file!")),
+        };
+
+        match file.write_all(buffer.as_bytes()) {
+            Ok(()) => Ok(()),
+            Err(_) => Err(String::from("Error: can't write to the file!")),
+        }
     }
 }
