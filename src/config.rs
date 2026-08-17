@@ -84,20 +84,6 @@ impl Var {
         v
     }
 
-    /*
-fn ds_lib_write(st: &str, filename: &str) -> Result<(), String> {
-    let mut file = match File::create(filename) {
-        Ok(file) => file,
-        Err(_) => return Err(String::from("Error: can't create the file!")),
-    };
-
-    match file.write_all(st.as_bytes()) {
-        Ok(()) => Ok(()),
-        Err(_) => Err(String::from("Error: can't write to the file!")),
-    }
-}
-    */
-
     pub fn write_var(&self, filename: &str) -> Result<(), String> {
         use std::{
             fs::File,
