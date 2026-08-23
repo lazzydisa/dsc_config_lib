@@ -22,49 +22,31 @@ impl Var {
         }
     }
 
-    pub fn parse_line(line: &str) -> Self {
+    fn parse_line(line: &str) -> Self {
         let (mut name, mut value) = (String::new(), String::new());
 
+        let mut iter = line.chars();
+
         // getting variable's name
-        for var in line.chars() {
-            match var {
+        while let Some(c) = iter.next() {
+            match c {
                 '"' | '\'' => continue, // don't use that characters in names please
                 ' ' | '\t' => continue,
-                '#' | ':'  => break,
-                _ => name.push(var)
+                ':' => break,
+                '#' => return Self { name, value },
+                _   => name.push(c)
             }
         }
 
         // getting variable's value
-        let (mut test1, mut test2, mut c_test) = (false, false, 'x');
-        for val in line.chars() {
-            if val != ':' && test1 == false { continue; }
-
-            test1 = true;
-
-            match val {
-                ':'  => continue,
-                '"'  => if c_test != '\'' {
-                    if test2 == false {
-                        test2 = true;
-                        c_test = '"';
-                        continue;
-                    } else {
-                        break;
-                    }
-                } else { value.push(val); },
-                '\'' => if c_test != '"' {
-                    if test2 == false { 
-                        test2 = true;
-                        c_test = '\'';
-                        continue;
-                    } else {
-                        break;
-                    }
-                } else { value.push(val); },
-                ' '  => if test2 == false { continue; } else { value.push(val); },
-                '#'  => if test2 == false { break; } else { value.push(val); },
-                _    => value.push(val),
+        let (mut count, mut test_c) = (0u8, '_');
+        while let Some(c) = iter.next() {
+            match c {
+                ' '  => if test_c == '\'' || test_c == '\"' && count != 2 { value.push(c); } else { continue; },
+                '#'  => if test_c == '\'' || test_c == '\"' && count != 2 { value.push(c); } else { break; },
+                '\"' => if test_c != '\'' { test_c = '\"'; count += 1; } else { value.push(c); },
+                '\'' => if test_c != '\"' { test_c = '\''; count += 1; } else { value.push(c); },
+                _    => value.push(c),
             }
         }
 
