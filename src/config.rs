@@ -108,4 +108,11 @@ impl Var {
             Err(_) => Err(String::from("Error: can't write to the file!")),
         }
     }
+
+    pub fn parse_file(file: &str) -> Result<Vec<Self>, String> {
+         match std::fs::read_to_string(file) {
+            Ok(st) => Ok(Self::collect_to_vec(&st)),
+            Err(_) => Err(String::from("Error: can't read the file")),
+        }
+    }
 }
