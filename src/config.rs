@@ -15,10 +15,10 @@ impl Var {
         &self.value
     }
 
-    pub fn new<'a>(value: &'a str, name: &'a str) -> Self {
+    pub fn new<'a>(name: &'a str, value: &'a str) -> Self {
         Self {
-            value: value.to_string(),
             name:  name.to_string(),
+            value: value.to_string(),
         }
     }
 
