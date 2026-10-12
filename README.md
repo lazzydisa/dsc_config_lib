@@ -7,10 +7,7 @@ Usage exxample:
 use dsc::config::*;
 
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
-    //let mut dsc_collection: Vec<Var> = Vec::new();
-
-    if let Ok(v) = Var::parse_file(&args[1]) {
+    if let Ok(v) = Var::parse_file("test.dsc") {
         println!("=== Result ===");
 
         for i in v.iter() {
