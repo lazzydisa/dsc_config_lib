@@ -1,9 +1,10 @@
 /* dsc config protocol */
 
 // struct that contains variable's name and its value
+#[derive(Debug)]
 pub struct Var {
-    pub name:  String,
-    pub value: String,
+    name:  String,
+    value: String,
 }
 
 impl Var {
@@ -22,7 +23,7 @@ impl Var {
         }
     }
 
-    fn parse_line(line: &str) -> Self {
+    pub fn parse_line(line: &str) -> Self {
         let (mut name, mut value) = (String::new(), String::new());
 
         let mut iter = line.chars();
@@ -85,7 +86,7 @@ impl Var {
         }
     }
 
-    pub fn write_var_vec(v: Vec<Self>, filename: &str) -> Result<(), String> {
+    pub fn write_var_vec(v: &Vec<Self>, filename: &str) -> Result<(), String> {
         use std::{
             fs::File,
             io::Write,
@@ -114,5 +115,11 @@ impl Var {
             Ok(st) => Ok(Self::collect_to_vec(&st)),
             Err(_) => Err(String::from("Error: can't read the file")),
         }
+    }
+}
+
+impl PartialEq for Var {
+    fn eq(&self, other: &Self) -> bool {
+        self.name == other.name && self.value == other.value
     }
 }
