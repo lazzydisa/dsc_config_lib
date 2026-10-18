@@ -32,9 +32,7 @@ fn get_test() {
 
 #[test]
 fn file_parsing() {
-    let vec = Var::collect_to_vec(&std::fs::read_to_string("test.dsc").unwrap());
-
-    if let Ok(v) = Var::parse_file("test.dsc") {
-        assert_eq!(v, vec);
-    }
+    let v1 = Var::collect_to_vec(&std::fs::read_to_string("test.dsc").unwrap());
+    let v2 = Var::parse_file("test.dsc").unwrap();
+    assert_eq!(v1, v2);
 }
