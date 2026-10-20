@@ -1,17 +1,15 @@
-Now i wrote the dsc config as a little library that contains basic functions for proccessing configs
+The dsc config and lines parser as a little crate that contains basic functions for proccessing configs
 
-Example for .dsc you can find in test.dsc file of this repo
-
-Usage exxample:
+Usage example:
 ```rust
-use dsc::config::*;
+use dsc_lib::*;
 
 fn main() {
     if let Ok(v) = Var::parse_file("test.dsc") {
         println!("=== Result ===");
 
         for i in v.iter() {
-            if *i.get_name() != "".to_string() && *i.get_value() != "".to_string() {
+            if *i.get_name() != "".to_string() && !i.is_empty() {
                 println!("{}: {}", i.get_name(), i.get_value());
             }
         }

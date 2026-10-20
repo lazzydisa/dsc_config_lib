@@ -4,7 +4,7 @@
 
 //! # DSC strings (DSC config)
 //!
-//! `dsc` is a crate that contains a struct and functions
+//! `dsc_lib` is a crate that contains a struct and functions
 //! for parsing dsc strings or configs (files.dsc)
 
 //! # Syntax of dsc strings and configs
@@ -45,7 +45,7 @@ impl Var {
     ///
     /// # Example
     /// ```
-    /// use dsc::*;
+    /// use dsc_lib::*;
     ///
     /// let _ = Var::new("var", "val");
     /// ```
@@ -60,7 +60,7 @@ impl Var {
     ///
     /// # Example
     /// ```
-    /// use dsc::*;
+    /// use dsc_lib::*;
     ///
     /// let var = Var::new("var", "val");
     /// let var_name = var.get_name();
@@ -74,7 +74,7 @@ impl Var {
     ///
     /// # Example
     /// ```
-    /// use dsc::*;
+    /// use dsc_lib::*;
     ///
     /// let var = Var::new("var", "val");
     /// let var_value = var.get_value();
@@ -88,7 +88,7 @@ impl Var {
     ///
     /// # Example
     /// ```
-    /// use dsc::*;
+    /// use dsc_lib::*;
     ///
     /// let var1 = Var::new("var", "val");
     /// assert!(var1.is_empty());
@@ -98,14 +98,14 @@ impl Var {
     /// assert!(var2.is_empty());
     /// ```
     pub fn is_empty(&self) -> bool {
-        *self.get_name() != "".to_string()
+        *self.get_name() == "".to_string()
     }
 
     /// returns a `Var` instance from a string
     ///
     /// # Example
     /// ```
-    /// use dsc::*;
+    /// use dsc_lib::*;
     ///
     /// let var1 = Var::parse_line("var: val # comment");
     /// let var2 = Var::new("var", "val");
@@ -150,7 +150,7 @@ impl Var {
     ///
     /// # Example
     /// ```
-    /// use dsc::*;
+    /// use dsc_lib::*;
     ///
     /// let file = std::fs::read_to_string("test.dsc").unwrap();
     /// let _ = Var::collect_to_vec(&file);
@@ -171,7 +171,7 @@ impl Var {
     ///
     /// # Example
     /// ```
-    /// use dsc::*;
+    /// use dsc_lib::*;
     ///
     /// let var = Var::new("var", "val");
     /// var.write_var("foo1.dsc");
@@ -203,7 +203,7 @@ impl Var {
     ///
     /// # Example
     /// ```
-    /// use dsc::*;
+    /// use dsc_lib::*;
     ///
     /// let st = " foo1: bar1
     /// foo2: bar2
@@ -241,7 +241,7 @@ impl Var {
     ///
     /// # Example
     /// ```
-    /// use dsc::*;
+    /// use dsc_lib::*;
     ///
     /// let vec = Var::parse_file("test.dsc");
     /// for i in vec.iter() {
@@ -259,7 +259,7 @@ impl Var {
     ///
     /// # Example
     /// ```
-    /// use dsc::*;
+    /// use dsc_lib::*;
     ///
     /// let var = Var::new("var", "val");
     /// let st = Var::var_to_string(&var);
