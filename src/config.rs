@@ -1,6 +1,39 @@
 /* dsc config protocol */
 
 // struct that contains variable's name and its value
+
+//! # DSC strings (DSC config)
+//!
+//! `dsc` is a crate that contains a struct and functions
+//! for parsing dsc strings or configs (files.dsc)
+
+//! # Syntax of dsc strings and configs
+//!
+//! 1. Usage of variables and values
+//! `foo: bar`
+//!
+//! it's literally `let foo = "bar"` in Rust!
+//! Also you can use `""` if you want add many words in `foo`:
+//! `foo: "bar bar bar"`
+//!
+//!
+//! 2. Usage of comments
+//! `# this line will be igmored by the parser!`
+//!
+//! Also you can use comments in lines with variables:
+//! `foo: bar # foo = "bar"`
+//! `foo2: "2xBar" # still comment`
+//!
+//!
+//! but also you can put `#` in value for some variables:
+//! `foo: "#" # foo = "#"`
+//!
+//!
+//! 3. More about quotes in syntax:
+//! You can use `''` instead of `""` and put them in them:
+//! `foo1: "'_'"`
+//! `foo2: 'foo: "#"'`
+
 #[derive(Debug, PartialEq)]
 pub struct Var {
     name:  String,
@@ -8,14 +41,14 @@ pub struct Var {
 }
 
 impl Var {
-    pub fn get_name(&self) -> &String {
-        &self.name
-    }
-
-    pub fn get_value(&self) -> &String {
-        &self.value
-    }
-
+    /// returns a new `Var` instance
+    ///
+    /// # Example
+    /// ```
+    /// use dsc::*;
+    ///
+    /// let _ = Var::new("var", "val");
+    /// ```
     pub fn new<'a>(name: &'a str, value: &'a str) -> Self {
         Self {
             name:  name.to_string(),
@@ -23,6 +56,61 @@ impl Var {
         }
     }
 
+    /// returns a reference to `Var.name`
+    ///
+    /// # Example
+    /// ```
+    /// use dsc::*;
+    ///
+    /// let var = Var::new("var", "val");
+    /// let var_name = var.get_name();
+    /// assert_eq!(var_name, "var");
+    /// ```
+    pub fn get_name(&self) -> &String {
+        &self.name
+    }
+
+    /// returns a reference to `Var.value`
+    ///
+    /// # Example
+    /// ```
+    /// use dsc::*;
+    ///
+    /// let var = Var::new("var", "val");
+    /// let var_value = var.get_value();
+    /// assert_eq!(var_value, "val");
+    /// ```
+    pub fn get_value(&self) -> &String {
+        &self.value
+    }
+
+    /// returns `true` if `Var.value` is not an empty string
+    ///
+    /// # Example
+    /// ```
+    /// use dsc::*;
+    ///
+    /// let var1 = Var::new("var", "val");
+    /// assert!(var1.is_empty());
+    ///
+    /// let var2 = Var::new("var", "");
+    /// #[should_panic]
+    /// assert!(var2.is_empty());
+    /// ```
+    pub fn is_empty(&self) -> bool {
+        *self.get_name() != "".to_string()
+    }
+
+    /// returns a `Var` instance from a string
+    ///
+    /// # Example
+    /// ```
+    /// use dsc::*;
+    ///
+    /// let var1 = Var::parse_line("var: val # comment");
+    /// let var2 = Var::new("var", "val");
+    /// assert_eq!(var1, var2);
+    /// ```
     pub fn parse_line(line: &str) -> Self {
         let (mut name, mut value) = (String::new(), String::new());
 
@@ -57,6 +145,16 @@ impl Var {
         }
     }
 
+    /// returns a vector that contains some `Var` instances using the parser
+    /// (gets `Var` instances from lines only! it's useful when you need to parse a file)
+    ///
+    /// # Example
+    /// ```
+    /// use dsc::*;
+    ///
+    /// let file = std::fs::read_to_string("test.dsc").unwrap();
+    /// let _ = Var::collect_to_vec(&file);
+    /// ```
     pub fn collect_to_vec(st: &str) -> Vec<Self> {
         let mut v: Vec<Self> = Vec::new();
 
@@ -67,6 +165,20 @@ impl Var {
         v
     }
 
+    /// writes a `Var` instance to the file
+    /// returns `Result<(), String>`
+    /// it is a method, not a function!
+    ///
+    /// # Example
+    /// ```
+    /// use dsc::*;
+    ///
+    /// let var = Var::new("var", "val");
+    /// var.write_var("foo1.dsc");
+    ///
+    /// let st = std::fs::read_to_string("foo1.dsc").unwrap();
+    /// assert_eq!("var: val", st);
+    /// ```
     pub fn write_var(&self, filename: &str) -> Result<(), String> {
         use std::{
             fs::File,
@@ -86,6 +198,21 @@ impl Var {
         }
     }
 
+    /// writes a vector of `Var` to the file,
+    /// returns `Result<(), String>
+    ///
+    /// # Example
+    /// ```
+    /// use dsc::*;
+    ///
+    /// let st = " foo1: bar1
+    /// foo2: bar2
+    /// foo3: bar3
+    /// ";
+    ///
+    /// let v = Var::collect_to_vec(st);
+    /// let _ = Var::write_var_vec(&v, "foo2.dsc").unwrap();
+    /// ```
     pub fn write_var_vec(v: &Vec<Self>, filename: &str) -> Result<(), String> {
         use std::{
             fs::File,
@@ -110,6 +237,17 @@ impl Var {
         }
     }
 
+    /// parses the file and returns `Resulr<Vec<Var>>, String>
+    ///
+    /// # Example
+    /// ```
+    /// use dsc::*;
+    ///
+    /// let vec = Var::parse_file("test.dsc");
+    /// for i in vec.iter() {
+    ///     println!("{:?}", i);
+    /// }
+    /// ```
     pub fn parse_file(file: &str) -> Result<Vec<Self>, String> {
          match std::fs::read_to_string(file) {
             Ok(st) => Ok(Self::collect_to_vec(&st)),
@@ -117,6 +255,16 @@ impl Var {
         }
     }
 
+    /// returns string that made from `Var` instance
+    ///
+    /// # Example
+    /// ```
+    /// use dsc::*;
+    ///
+    /// let var = Var::new("var", "val");
+    /// let st = Var::var_to_string(&var);
+    /// assert_eq!("var: val", st);
+    /// ```
     pub fn var_to_string(var: &Self) -> String {
         format!("{}: {}", var.name, var.value)
     }
