@@ -1,7 +1,7 @@
 /* dsc config protocol */
 
 // struct that contains variable's name and its value
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Var {
     name:  String,
     value: String,
@@ -119,11 +119,5 @@ impl Var {
 
     pub fn var_to_string(var: &Self) -> String {
         format!("{}: {}", var.name, var.value)
-    }
-}
-
-impl PartialEq for Var {
-    fn eq(&self, other: &Self) -> bool {
-        self.name == other.name && self.value == other.value
     }
 }
