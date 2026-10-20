@@ -116,6 +116,10 @@ impl Var {
             Err(_) => Err(String::from("Error: can't read the file")),
         }
     }
+
+    pub fn var_to_string(var: &Self) -> String {
+        format!("{}: {}", var.name, var.value)
+    }
 }
 
 impl PartialEq for Var {

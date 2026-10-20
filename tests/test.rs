@@ -1,4 +1,4 @@
-use dsc::config::*;
+use dsc::*;
 
 #[test]
 fn parsing_test1() {
@@ -10,7 +10,7 @@ fn parsing_test1() {
 #[test]
 fn parsing_test2() {
     let var1 = Var::new("var", "this '#' is supported!");
-    let var2 = Var::parse_line("var: \"this '#' is supported!\" # should works");
+    let var2 = Var::parse_line("var: \"this '#' is supported!\" # should work");
     assert_eq!(var1, var2);
 }
 
@@ -35,4 +35,11 @@ fn file_parsing() {
     let v1 = Var::collect_to_vec(&std::fs::read_to_string("test.dsc").unwrap());
     let v2 = Var::parse_file("test.dsc").unwrap();
     assert_eq!(v1, v2);
+}
+
+#[test]
+fn var_to_str() {
+    let var = Var::new("var", "val");
+    let str = "var: val";
+    assert_eq!(str.to_string(), Var::var_to_string(&var));
 }
