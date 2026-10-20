@@ -1,4 +1,4 @@
-use dsc::*;
+use dsc_lib::*;
 
 #[test]
 fn parsing_test1() {
