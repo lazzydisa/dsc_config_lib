@@ -91,14 +91,13 @@ impl Var {
     /// use dsc_lib::*;
     ///
     /// let var1 = Var::new("var", "val");
-    /// assert!(var1.is_empty());
+    /// assert!(!var1.is_empty());
     ///
     /// let var2 = Var::new("var", "");
-    /// #[should_panic]
     /// assert!(var2.is_empty());
     /// ```
     pub fn is_empty(&self) -> bool {
-        *self.get_name() == "".to_string()
+        *self.get_value() == "".to_string()
     }
 
     /// returns a `Var` instance from a string
@@ -130,12 +129,16 @@ impl Var {
         // getting variable's value
         let (mut count, mut test_c) = (0u8, '_');
         while let Some(c) = iter.next() {
-            match c {
-                ' '  => if test_c == '\'' || test_c == '\"' && count != 2 { value.push(c); } else { continue; },
-                '#'  => if test_c == '\'' || test_c == '\"' && count != 2 { value.push(c); } else { break; },
-                '\"' => if test_c != '\'' { test_c = '\"'; count += 1; } else { value.push(c); },
-                '\'' => if test_c != '\"' { test_c = '\''; count += 1; } else { value.push(c); },
-                _    => value.push(c),
+            if count != 2 {
+                match c {
+                    ' '  => if test_c == '\'' || test_c == '\"' && count != 2 { value.push(c); } else { continue; },
+                    '#'  => if test_c == '\'' || test_c == '\"' && count != 2 { value.push(c); } else { break; },
+                    '\"' => if test_c != '\'' { test_c = '\"'; count += 1; } else { value.push(c); },
+                    '\'' => if test_c != '\"' { test_c = '\''; count += 1; } else { value.push(c); },
+                    _    => value.push(c),
+                }
+            } else {
+                break;
             }
         }
 

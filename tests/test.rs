@@ -23,10 +23,17 @@ fn parsing_test3() {
 
 #[test]
 fn parsing_test4() {
-    let var1 = Var::parse_line("var: 'sas = \"#\"'");
+    let var1 = Var::parse_line("var: 'sas = \"#\"' # comment");
     let var2 = Var::new("var", "sas = \"#\"");
     assert_eq!(var1, var2);
 }
+
+#[test]
+fn parsing_test5() {
+    let var = Var::parse_line("var: ''");
+    assert!(var.is_empty());
+}
+
 
 #[test]
 fn get_test() {
