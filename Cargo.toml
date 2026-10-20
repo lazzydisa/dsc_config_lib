@@ -2,7 +2,7 @@
 name = "dsc"
 version = "1.0.0"
 edition = "2024"
-license = "BSD 2-Clause"
+license = "BSD-2-Clause"
 description = "DSC lines and config parser"
 
 [dependencies]
