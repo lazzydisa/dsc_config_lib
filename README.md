@@ -16,3 +16,6 @@ fn main() {
     }
 }
 ```
+
+Written by my hands only! I don't use ai and not wanna use in the future,
+that's why I won't approve requests from ai users, if you want to do that - do a fork.

@@ -1,5 +1,4 @@
 /target
-/Cargo.lock
 /src/main.rs
 /foo1.dsc
 /foo2.dsc
