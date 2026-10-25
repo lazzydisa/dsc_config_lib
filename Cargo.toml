@@ -1,6 +1,6 @@
 [package]
 name = "dsc_lib"
-version = "1.0.3"
+version = "1.0.4"
 edition = "2024"
 license = "BSD-2-Clause"
 description = "DSC lines and config parser"
