@@ -34,7 +34,7 @@
 //! `foo1: "'_'"`
 //! `foo2: 'foo: "#"'`
 
-#[derive(Debug, PartialEq, Copy)]
+#[derive(Debug, PartialEq)]
 pub struct Var {
     name:  String,
     value: String,
